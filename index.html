@@ -260,6 +260,52 @@ footer .copy{grid-column:1/-1;border-top:1px solid rgba(250,247,240,.16);margin-
 </script>
 </head>
 <body>
+<!-- LANGUAGE PICKER MODAL -->
+<div id="langModal" style="position:fixed;inset:0;background:rgba(15,31,60,.78);backdrop-filter:blur(4px);z-index:9999;display:grid;place-items:center;padding:24px;font-family:var(--font-sans)">
+  <div style="background:var(--paper);border-radius:16px;padding:36px 32px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.30);text-align:center;border:1px solid var(--line)">
+    <div style="width:54px;height:54px;background:var(--ink);color:var(--gold);border-radius:12px;display:grid;place-items:center;margin:0 auto 18px;font-family:var(--font-serif);font-size:28px;font-weight:700;letter-spacing:-.04em">Z</div>
+    <div style="font-family:var(--font-sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px">Zenith Education, Jaipur · Est. 1998</div>
+    <h2 class="ser" style="margin:0 0 8px;font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:600;line-height:1.2">Choose your language</h2>
+    <div style="font-family:'Tiro Devanagari Hindi','Fraunces',serif;font-size:clamp(20px,2.6vw,24px);color:var(--ink-soft);margin-bottom:24px;line-height:1.3;font-style:italic">अपनी भाषा चुनें</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <button id="langEN" type="button" style="background:var(--ink);color:var(--paper);border:0;padding:16px 18px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:var(--font-sans);transition:transform .15s,box-shadow .15s">
+        English
+        <div style="font-size:11px;font-weight:500;color:rgba(250,247,240,.7);margin-top:3px;letter-spacing:.04em">Continue in English</div>
+      </button>
+      <button id="langHI" type="button" style="background:var(--gold);color:#fff;border:0;padding:16px 18px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Mukta','Inter',sans-serif;transition:transform .15s,box-shadow .15s">
+        हिन्दी
+        <div style="font-size:11px;font-weight:500;color:rgba(255,255,255,.85);margin-top:3px;letter-spacing:.02em">हिन्दी में जारी रखें</div>
+      </button>
+    </div>
+    <p style="margin:18px 0 0;color:var(--muted);font-size:12px;letter-spacing:.02em">You can change this anytime from the top-right corner.<br><span style="font-family:'Mukta',sans-serif">आप ऊपर दाईं ओर से कभी भी भाषा बदल सकते हैं।</span></p>
+  </div>
+</div>
+<style>
+#langModal button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+#langModal button:active{transform:translateY(0)}
+@media(max-width:480px){
+  #langModal>div{padding:28px 22px}
+  #langModal h2{font-size:22px}
+  #langModal button{padding:14px 12px;font-size:15px}
+}
+body.lang-locked{overflow:hidden}
+</style>
+<script>
+(function(){
+  document.body.classList.add('lang-locked');
+  var modal=document.getElementById('langModal');
+  function pick(lang){
+    try{setLang(lang);}catch(e){}
+    document.body.classList.remove('lang-locked');
+    modal.style.transition='opacity .25s';
+    modal.style.opacity='0';
+    setTimeout(function(){modal.style.display='none';}, 260);
+  }
+  document.getElementById('langEN').addEventListener('click', function(){pick('en');});
+  document.getElementById('langHI').addEventListener('click', function(){pick('hi');});
+})();
+</script>
+
 
 <!-- TOP BAR -->
 <header class="topbar">
@@ -764,7 +810,7 @@ function setLang(l){
   try{ localStorage.setItem('zen_lang',l); }catch(e){}
 }
 document.querySelectorAll('.lang button').forEach(function(b){ b.addEventListener('click', function(){ setLang(this.dataset.set); }); });
-try{ var saved = localStorage.getItem('zen_lang'); if(saved) setLang(saved); }catch(e){}
+
 
 window.sendOnWhatsApp = function(form){
   if(!form) form=document.querySelector('form[name=enquiry]');
